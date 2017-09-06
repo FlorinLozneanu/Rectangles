@@ -35,8 +35,9 @@ public:
 		return m_rectangles;
 	}
 
-private:
 	Status fromJson(const json::json &);
+
+private:
 	bool isValidJsonRectObject(const json::json &);
 
 private:

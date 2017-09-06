@@ -111,6 +111,51 @@ TEST(Rectangles, Sample_SingleRect)
 	ASSERT_EQ(results.size(), 0);
 }
 
+TEST(Rectangles, Sample_1000Rects)
+{
+	using json = nlohmann::json;
+
+	// generates 1000 rects
+	json rectObj = { { "x", 100 },{ "y", 100 },{ "w", 20 },{ "h", 20 } };
+	std::vector<json> v;
+	for (int i = 0; i < 1000; i++)
+	{
+		v.push_back(rectObj);
+	}
+	json rectObjects(v);
+	
+	json root;
+	root["rects"] = rectObjects;
+
+	Rectangles rects;
+	auto status = rects.fromJson(root);
+	ASSERT_EQ(status, Rectangles::Status::Ok);
+	ASSERT_EQ(rects.count(), 1000);
+}
+
+TEST(Rectangles, Sample_MoreThan1000Rects)
+{
+	using json = nlohmann::json;
+
+	// generates more than 1000 rects
+	json rectObj = { { "x", 100 },{ "y", 100 },{ "w", 20 },{ "h", 20 } };
+	std::vector<json> v;
+	for (int i = 0; i < 1002; i++)
+	{
+		v.push_back(rectObj);
+	}
+	json rectObjects(v);
+
+	json root;
+	root["rects"] = rectObjects;
+
+	Rectangles rects;
+	auto status = rects.fromJson(root);
+	ASSERT_EQ(status, Rectangles::Status::Ok);
+	ASSERT_EQ(rects.count(), 1000);
+
+}
+
 /// Unit tests for class Segment
 TEST(Segment, Intersection)
 {
