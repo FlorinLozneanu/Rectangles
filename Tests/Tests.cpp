@@ -214,6 +214,25 @@ TEST(Rectangle, FindIntersectionWithSegment)
 	ASSERT_EQ((seg2.a == 15) && (seg2.b == 35), true);
 }
 
+///
+TEST(Rectangle, FindIntersectionWithSegment2)
+{
+	Rectangle rect{ 10, 10, 20, 30 };	// (10, 10), (30, 40)
+	Rectangle rect2{ 10, 10, 40, 55 };	// (10, 10), (50, 65}
+	auto seg2 = rect.findIntersectionWithVertSegment(rect2);
+	ASSERT_EQ(seg2.empty(), false);
+	ASSERT_EQ((seg2.a == 10) && (seg2.b == 40), true);
+}
+
+///
+TEST(Rectangle, FindIntersectionWithSegmentNot)
+{
+	Rectangle rect{ 10, 50, 20, 25 };	// (10, 50), (30, 75)
+	Rectangle rect2{ 35, 55, 10, 15 };	// (35, 55), (45, 70}
+	auto seg2 = rect.findIntersectionWithVertSegment(rect2);
+	ASSERT_EQ(seg2.empty(), true);
+}
+
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
