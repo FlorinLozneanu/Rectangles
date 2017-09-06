@@ -40,6 +40,14 @@ struct Segment
 		return { std::max(a, other.a), std::min(b, other.b) };
 	}
 
+	Segment findIntersection(const Segment &other) const
+	{
+		if (!intersect(other))
+			return Segment();
+
+		return getIntersection(other);
+	}
+
 	// Overrides the 'less' operator
 	bool operator <(const Segment &other) const
 	{
@@ -199,7 +207,7 @@ public:
 	}
 
 	//
-	Segment findeIntersectionSegment(const Rectangle &rect) const
+	Segment findIntersectionWithVertSegment(const Rectangle &rect) const
 	{
 		Segment segment;
 		if (intersect(rect))

@@ -111,6 +111,109 @@ TEST(Rectangles, Sample_SingleRect)
 	ASSERT_EQ(results.size(), 0);
 }
 
+/// Unit tests for class Segment
+TEST(Segment, Intersection)
+{
+	Segment seg1{ 3, 8 };
+	Segment seg2{ 6, 24 };
+	ASSERT_EQ(seg1.intersect(seg2), true);
+}
+
+TEST(Segment, Intersection2)
+{
+	Segment seg1{ 7, 14 };
+	Segment seg2{ 3, 10 };
+	ASSERT_EQ(seg1.intersect(seg2), true);
+}
+
+TEST(Segment, Intersection3)
+{
+	Segment seg1{ 6, 18 };
+	Segment seg2{ 10, 14 };
+	ASSERT_EQ(seg1.intersect(seg2), true);
+}
+
+TEST(Segment, Intersection4)
+{
+	Segment seg1{ 6, 18 };
+	Segment seg2{ 6, 18 };
+	ASSERT_EQ(seg1.intersect(seg2), true);
+}
+
+TEST(Segment, IntersectionNot)
+{
+	Segment seg1{ 6, 18 };
+	Segment seg2{ 20, 24 };
+	ASSERT_EQ(seg1.intersect(seg2), false);
+}
+
+TEST(Segment, IntersectionNot2)
+{
+	Segment seg1{ 6, 18 };
+	Segment seg2{ 1, 4 };
+	ASSERT_EQ(seg1.intersect(seg2), false);
+}
+
+///
+TEST(Segment, GetIntersection)
+{
+	Segment seg1{ 3, 8 };
+	Segment seg2{ 6, 24 };
+	Segment seg = seg1.getIntersection(seg2);
+	ASSERT_EQ((seg.a == 6) && (seg.b == 8), true);
+}
+
+TEST(Segment, GetIntersection2)
+{
+	Segment seg1{ 7, 14 };
+	Segment seg2{ 3, 10 };
+
+	Segment seg = seg1.getIntersection(seg2);
+	ASSERT_EQ((seg.a == 7) && (seg.b == 10), true);
+}
+
+TEST(Segment, GetIntersection3)
+{
+	Segment seg1{ 6, 18 };
+	Segment seg2{ 10, 14 };
+	Segment seg = seg1.getIntersection(seg2);
+	ASSERT_EQ((seg.a == 10) && (seg.b == 14), true);
+}
+
+TEST(Segment, GetIntersection4)
+{
+	Segment seg1{ 6, 18 };
+	Segment seg2{ 6, 18 };
+	Segment seg = seg1.getIntersection(seg2);
+	ASSERT_EQ((seg.a == 6) && (seg.b == 18), true);
+}
+
+TEST(Segment, FindIntersectionNot)
+{
+	Segment seg1{ 6, 18 };
+	Segment seg2{ 20, 24 };
+	Segment seg = seg1.findIntersection(seg2);
+	ASSERT_EQ(seg.empty(), true);
+}
+
+TEST(Segment, FindIntersectionNot2)
+{
+	Segment seg1{ 6, 18 };
+	Segment seg2{ 1, 4 };
+	Segment seg = seg1.findIntersection(seg2);
+	ASSERT_EQ(seg.empty(), true);
+}
+
+///
+TEST(Rectangle, FindIntersectionWithSegment)
+{
+	Rectangle rect{ 10, 10, 20, 30 };	// (10, 10), (30, 40)
+	Rectangle rect2{ 5, 15, 10, 20 };	// (5, 15), (15, 35}
+	auto seg2 = rect.findIntersectionWithVertSegment(rect2);
+	ASSERT_EQ(seg2.empty(), false);
+	ASSERT_EQ((seg2.a == 15) && (seg2.b == 35), true);
+}
+
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();

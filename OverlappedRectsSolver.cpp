@@ -164,7 +164,7 @@ bool OverlappedRectsSolver::checkIntersection(const Rectangle& rect, std::vector
 {
 	for (auto& activeRectIndex : m_activeRects)
 	{
-		auto segment = rect.findeIntersectionSegment(m_rectangles[activeRectIndex]);
+		auto segment = rect.findIntersectionWithVertSegment(m_rectangles[activeRectIndex]);
 		if (!segment.empty())
 		{
 			segments.push_back(segment);
