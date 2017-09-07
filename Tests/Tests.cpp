@@ -215,37 +215,33 @@ TEST(Rectangles, Sample_DuplicatedRects2)
 	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 1, 2 }, { 20, 20, 30, 40 } }, it->second));
 }
 
-//TEST(Rectangles, Sample_CommonEdge)
-//{
-//	Rectangles rects;
-//	auto res = rects.loadFromFile("..\\..\\..\\data\\sample-common-edge.json");
-//	ASSERT_EQ(res, Rectangles::Status::Ok);
-//	ASSERT_EQ(rects.count(), 2);
-//
-//	OverlappedRectsSolver solver(rects.rectangles());
-//	solver.solve();
-//
-//	auto& results = solver.results();
-//	ASSERT_EQ(results.size(), 0);
-//}
-//
-//TEST(Rectangles, Sample_CommonEdge2)
-//{
-//	Rectangles rects;
-//	auto res = rects.loadFromFile("..\\..\\..\\data\\sample-common-edge2.json");
-//	ASSERT_EQ(res, Rectangles::Status::Ok);
-//	ASSERT_EQ(rects.count(), 2);
-//
-//	OverlappedRectsSolver solver(rects.rectangles());
-//	solver.solve();
-//
-//	auto& results = solver.results();
-//	ASSERT_EQ(results.size(), 1);
-//
-//	auto& it = results.find(2);
-//	ASSERT_NE(it, results.end());
-//	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 1 },{ 10, 60, 40, 0 } }, it->second));
-//}
+TEST(Rectangles, Sample_CommonEdge)
+{
+	Rectangles rects;
+	auto res = rects.loadFromFile("..\\..\\..\\data\\sample-common-edge.json");
+	ASSERT_EQ(res, Rectangles::Status::Ok);
+	ASSERT_EQ(rects.count(), 2);
+
+	OverlappedRectsSolver solver(rects.rectangles());
+	solver.solve();
+
+	auto& results = solver.results();
+	ASSERT_EQ(results.size(), 0);
+}
+
+TEST(Rectangles, Sample_CommonEdge2)
+{
+	Rectangles rects;
+	auto res = rects.loadFromFile("..\\..\\..\\data\\sample-common-edge2.json");
+	ASSERT_EQ(res, Rectangles::Status::Ok);
+	ASSERT_EQ(rects.count(), 2);
+
+	OverlappedRectsSolver solver(rects.rectangles());
+	solver.solve();
+
+	auto& results = solver.results();
+	ASSERT_EQ(results.size(), 0);
+}
 
 TEST(Rectangles, Sample_LessThan1000Rects)
 {
@@ -357,6 +353,13 @@ TEST(Segment, IntersectionNot2)
 	ASSERT_EQ(seg1.intersect(seg2), false);
 }
 
+TEST(Segment, IntersectionNot3)
+{
+	Segment seg1{ 6, 18 };
+	Segment seg2{ 18, 24 };
+	ASSERT_EQ(seg1.intersect(seg2), false);
+}
+
 ///
 TEST(Segment, GetIntersection)
 {
@@ -403,6 +406,14 @@ TEST(Segment, FindIntersectionNot2)
 {
 	Segment seg1{ 6, 18 };
 	Segment seg2{ 1, 4 };
+	Segment seg = seg1.findIntersection(seg2);
+	ASSERT_EQ(seg.empty(), true);
+}
+
+TEST(Segment, FindIntersectionNot3)
+{
+	Segment seg1{ 6, 18 };
+	Segment seg2{ 18, 24 };
 	Segment seg = seg1.findIntersection(seg2);
 	ASSERT_EQ(seg.empty(), true);
 }

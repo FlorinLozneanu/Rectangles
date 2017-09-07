@@ -87,20 +87,16 @@ void OverlappedRectsSolver::processIntersectionSegments(const std::vector<Segmen
 
 		for (size_t j = i + 1; j < segments.size(); j++)
 		{
-			if (segments[i].intersect(segments[j]))
-			{
-				rects.insert(segments[j].rectIndex2);
-				overlap = overlap.getIntersection(m_rectangles[segments[j].rectIndex2]);
-			}
-			else
-			{
+			if (!segments[i].intersect(segments[j]))
 				break;
-			}
+
+			rects.insert(segments[j].rectIndex2);
+			overlap = overlap.getIntersection(m_rectangles[segments[j].rectIndex2]);
 		}
 
-		if (rects.size() > 2)
+		// do we have more than two overlapping rectangles and the intersection is a rectangle ?
+		if ((rects.size() > 2))
 		{
-			// do we have more than two overlapping rectangles ?
 			OveralappingRectangles ovlRects;
 			ovlRects.rectIndexes = rects;
 			ovlRects.overlapRect = overlap;
@@ -134,7 +130,7 @@ void OverlappedRectsSolver::printResults()
 			std::stringstream stream;
 			for (auto i : result.rectIndexes)
 			{
-				stream << (i+1) << ", ";
+				stream << (i + 1) << ", ";
 			}
 			auto s = stream.str();
 

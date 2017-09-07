@@ -29,12 +29,12 @@ struct Segment
 
 	bool empty() const
 	{
-		return (a == INT_MIN) && (b == INT_MAX);
+		return (a == b) || ((a == INT_MIN) && (b == INT_MAX));
 	}
 
 	bool intersect(const Segment &other) const
 	{
-		return !((a > other.b) || (b < other.a));
+		return !((a >= other.b) || (b <= other.a));
 	}
 
 	Segment getIntersection(const Segment &other) const
@@ -185,7 +185,7 @@ public:
 
 	bool empty() const
 	{
-		return (width() == 0) && (height() == 0);
+		return (width() == 0) || (height() == 0);
 	}
 
 	// Tests if 'this' rectangle overlaps another rectangle.
