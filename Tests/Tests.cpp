@@ -166,6 +166,87 @@ TEST(Rectangles, Sample_TwoRects)
 	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 1 },{ 110, 100, 30, 40 } }, it->second));
 }
 
+TEST(Rectangles, Sample_DuplicatedRects)
+{
+	Rectangles rects;
+	auto res = rects.loadFromFile("..\\..\\..\\data\\sample-duplicates.json");
+	ASSERT_EQ(res, Rectangles::Status::Ok);
+	ASSERT_EQ(rects.count(), 2);
+
+	OverlappedRectsSolver solver(rects.rectangles());
+	solver.solve();
+
+	auto& results = solver.results();
+	ASSERT_EQ(results.size(), 1);
+
+	auto& it = results.find(2);
+	ASSERT_NE(it, results.end());
+	ASSERT_EQ(it->second.size(), 1);
+
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 1 }, { 100, 100, 250, 80 } }, it->second));
+
+}
+
+TEST(Rectangles, Sample_DuplicatedRects2)
+{
+	Rectangles rects;
+	auto res = rects.loadFromFile("..\\..\\..\\data\\sample-duplicates2.json");
+	ASSERT_EQ(res, Rectangles::Status::Ok);
+	ASSERT_EQ(rects.count(), 3);
+
+	OverlappedRectsSolver solver(rects.rectangles());
+	solver.solve();
+
+	auto& results = solver.results();
+	ASSERT_EQ(results.size(), 2);
+
+	auto& it = results.find(2);
+	ASSERT_NE(it, results.end());
+	ASSERT_EQ(it->second.size(), 3);
+
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 1 }, { 20, 20, 30, 40 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 2 }, { 20, 20, 30, 40 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 1, 2 }, { 20, 20, 60, 70 } }, it->second));
+
+	it = results.find(3);
+	ASSERT_NE(it, results.end());
+	ASSERT_EQ(it->second.size(), 1);
+
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 1, 2 }, { 20, 20, 30, 40 } }, it->second));
+}
+
+//TEST(Rectangles, Sample_CommonEdge)
+//{
+//	Rectangles rects;
+//	auto res = rects.loadFromFile("..\\..\\..\\data\\sample-common-edge.json");
+//	ASSERT_EQ(res, Rectangles::Status::Ok);
+//	ASSERT_EQ(rects.count(), 2);
+//
+//	OverlappedRectsSolver solver(rects.rectangles());
+//	solver.solve();
+//
+//	auto& results = solver.results();
+//	ASSERT_EQ(results.size(), 0);
+//}
+//
+//TEST(Rectangles, Sample_CommonEdge2)
+//{
+//	Rectangles rects;
+//	auto res = rects.loadFromFile("..\\..\\..\\data\\sample-common-edge2.json");
+//	ASSERT_EQ(res, Rectangles::Status::Ok);
+//	ASSERT_EQ(rects.count(), 2);
+//
+//	OverlappedRectsSolver solver(rects.rectangles());
+//	solver.solve();
+//
+//	auto& results = solver.results();
+//	ASSERT_EQ(results.size(), 1);
+//
+//	auto& it = results.find(2);
+//	ASSERT_NE(it, results.end());
+//	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 1 },{ 10, 60, 40, 0 } }, it->second));
+//}
+
 TEST(Rectangles, Sample_LessThan1000Rects)
 {
 	using json = nlohmann::json;
