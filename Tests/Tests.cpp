@@ -7,6 +7,17 @@
 #include "..\Rectangles.h"
 #include "..\OverlappedRectsSolver.h"
 
+/// Helper function: checks if 'ovRects' is a solution
+bool CheckResult(const OveralappingRectangles &ovRects, const std::list<OveralappingRectangles> &results)
+{
+	auto it = std::find_if(results.begin(), results.end(), 
+		[&ovRects](const OveralappingRectangles& ovr) {
+		return (ovRects.rectIndexes == ovr.rectIndexes) && (ovRects.overlapRect == ovr.overlapRect);
+	});
+
+	return it != results.end();
+}
+
 TEST(Rectangles, WrongJsonFilePath) {
 	Rectangles rects;
 	auto res = rects.loadFromFile("C:\\Windows\\rects.json");
@@ -15,7 +26,7 @@ TEST(Rectangles, WrongJsonFilePath) {
 
 TEST(SquareRootTest, InvalidJsonFormat) {
 	Rectangles rects;
-	auto res = rects.loadFromFile("..\\data\\invalid-format.json");
+	auto res = rects.loadFromFile("..\\..\\..\\data\\invalid-format.json");
 	ASSERT_EQ(res, Rectangles::Status::UnexpectedJsonObject);
 
 }
@@ -23,14 +34,14 @@ TEST(SquareRootTest, InvalidJsonFormat) {
 TEST(Rectangles, InvalidJsonFormat_NegativeValues)
 {
 	Rectangles rects;
-	auto res = rects.loadFromFile("..\\data\\sample-negative-values.json");
+	auto res = rects.loadFromFile("..\\..\\..\\data\\sample-negative-values.json");
 	ASSERT_EQ(res, Rectangles::Status::InvalidRectValues);
 }
 
 TEST(Rectangles, Sample1)
 {
 	Rectangles rects;
-	auto res = rects.loadFromFile("..\\data\\sample1.json");
+	auto res = rects.loadFromFile("..\\..\\..\\data\\sample1.json");
 	ASSERT_EQ(res, Rectangles::Status::Ok);
 	ASSERT_EQ(rects.count(), 4);
 
@@ -44,15 +55,24 @@ TEST(Rectangles, Sample1)
 	ASSERT_NE(it, results.end());
 	ASSERT_EQ(it->second.size(), 5);
 
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 2 }, { 140, 160, 210, 20 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 1, 2 },{ 140, 200, 230, 60 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 3 },{ 160, 140, 190, 40 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 2, 3 },{ 160, 160, 230, 100 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 1, 3 },{ 160, 200, 210, 130 } }, it->second));
+
 	it = results.find(3);
 	ASSERT_NE(it, results.end());
 	ASSERT_EQ(it->second.size(), 2);
+
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 2, 3 },{ 160, 160, 190, 20 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 1, 2, 3 },{ 160, 200, 210, 60 } }, it->second));
 }
 
 TEST(Rectangles, Sample2)
 {
 	Rectangles rects;
-	auto res = rects.loadFromFile("..\\data\\sample2.json");
+	auto res = rects.loadFromFile("..\\..\\..\\data\\sample2.json");
 	ASSERT_EQ(res, Rectangles::Status::Ok);
 	ASSERT_EQ(rects.count(), 6);
 
@@ -66,27 +86,44 @@ TEST(Rectangles, Sample2)
 	ASSERT_NE(it, results.end());
 	ASSERT_EQ(it->second.size(), 15);
 
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 4, 5 },{ 60, 60, 90, 90 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 2, 5 },{ 80, 80, 50, 50 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 1, 4 },{ 90, 90, 30, 30 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 2 },{ 100, 100, 10, 10 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 3, 4 },{ 70, 70, 70, 70 } }, it->second));
+
 	it = results.find(3);
 	ASSERT_NE(it, results.end());
 	ASSERT_EQ(it->second.size(), 4);
+
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 3, 4, 5 },{ 70, 70, 70, 70 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 2, 4, 5 },{ 80, 80, 50, 50 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 1, 4, 5 },{ 90, 90, 30, 30 } }, it->second));
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 4, 5 },{ 100, 100, 10, 10 } }, it->second));
 
 	it = results.find(4);
 	ASSERT_NE(it, results.end());
 	ASSERT_EQ(it->second.size(), 3);
 
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 2, 3, 4, 5 },{ 80, 80, 50, 50 } }, it->second));
+
 	it = results.find(5);
 	ASSERT_NE(it, results.end());
 	ASSERT_EQ(it->second.size(), 2);
 
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 1, 2, 3, 4, 5 },{ 90, 90, 30, 30 } }, it->second));
+
 	it = results.find(6);
 	ASSERT_NE(it, results.end());
 	ASSERT_EQ(it->second.size(), 1);
+
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 1, 2, 3, 4, 5 },{ 100, 100, 10, 10 } }, it->second));
 }
 
 TEST(Rectangles, Sample3_NoIntersection)
 {
 	Rectangles rects;
-	auto res = rects.loadFromFile("..\\data\\sample3.json");
+	auto res = rects.loadFromFile("..\\..\\..\\data\\sample3.json");
 	ASSERT_EQ(res, Rectangles::Status::Ok);
 	ASSERT_EQ(rects.count(), 3);
 
@@ -100,7 +137,7 @@ TEST(Rectangles, Sample3_NoIntersection)
 TEST(Rectangles, Sample_SingleRect)
 {
 	Rectangles rects;
-	auto res = rects.loadFromFile("..\\data\\single-rect.json");
+	auto res = rects.loadFromFile("..\\..\\..\\data\\single-rect.json");
 	ASSERT_EQ(res, Rectangles::Status::Ok);
 	ASSERT_EQ(rects.count(), 1);
 
@@ -109,6 +146,46 @@ TEST(Rectangles, Sample_SingleRect)
 
 	auto& results = solver.results();
 	ASSERT_EQ(results.size(), 0);
+}
+
+TEST(Rectangles, Sample_TwoRects)
+{
+	Rectangles rects;
+	auto res = rects.loadFromFile("..\\..\\..\\data\\two-rects.json");
+	ASSERT_EQ(res, Rectangles::Status::Ok);
+	ASSERT_EQ(rects.count(), 2);
+
+	OverlappedRectsSolver solver(rects.rectangles());
+	solver.solve();
+
+	auto& results = solver.results();
+	ASSERT_EQ(results.size(), 1);
+
+	auto& it = results.find(2);
+	ASSERT_NE(it, results.end());
+	ASSERT_TRUE(CheckResult({ std::set<rect_index_t>{ 0, 1 },{ 110, 100, 30, 40 } }, it->second));
+}
+
+TEST(Rectangles, Sample_LessThan1000Rects)
+{
+	using json = nlohmann::json;
+
+	// generates 1000 rects
+	json rectObj = { { "x", 100 },{ "y", 100 },{ "w", 20 },{ "h", 20 } };
+	std::vector<json> v;
+	for (int i = 0; i < 999; i++)
+	{
+		v.push_back(rectObj);
+	}
+	json rectObjects(v);
+
+	json root;
+	root["rects"] = rectObjects;
+
+	Rectangles rects;
+	auto status = rects.fromJson(root);
+	ASSERT_EQ(status, Rectangles::Status::Ok);
+	ASSERT_EQ(rects.count(), 999);
 }
 
 TEST(Rectangles, Sample_1000Rects)

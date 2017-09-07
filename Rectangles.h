@@ -25,7 +25,7 @@ public:
 	void printRectangles();
 	void solveOverlappedRects();
 
-	size_t count() const
+	rect_index_t count() const
 	{
 		return m_rectangles.size();
 	}

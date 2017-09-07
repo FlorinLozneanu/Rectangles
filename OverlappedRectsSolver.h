@@ -10,9 +10,9 @@ enum EventType : int
 
 struct Event
 {
-	size_t rectIndex;	// index of the rectangle
-	int x;				// the X-coordinate of the left or right edge of the rectangle
-	EventType type;		// the type of the event  (In: left edge, Out: right edge)
+	rect_index_t rectIndex;	// index of the rectangle
+	int x;					// the X-coordinate of the left or right edge of the rectangle
+	EventType type;			// the type of the event  (In: left edge, Out: right edge)
 
 	// Overrides the 'less' operator (it will be used by std::sort).
 	bool operator <(const Event &other) const
@@ -24,10 +24,19 @@ struct Event
 struct OveralappingRectangles
 {
 	// the set of rectangles which intersect each other (I choose 'set' because I want to print them in ascending order).
-	std::set<size_t> rectIndexes;
+	std::set<rect_index_t> rectIndexes;
 
 	// the intersection between all the rectangles from 'rectIndexes'
 	Rectangle overlapRect;
+
+	OveralappingRectangles() {}
+
+	OveralappingRectangles(const std::set<rect_index_t> indexes, const Rectangle &rect)
+		: rectIndexes(indexes)
+		, overlapRect(rect)
+	{
+
+	}
 };
 
 ///
@@ -59,7 +68,7 @@ public:
 	void printResults();
 
 	typedef std::list<OveralappingRectangles> OverlappingRectList;
-	typedef std::map<size_t, OverlappingRectList> Results;
+	typedef std::map<rect_index_t, OverlappingRectList> Results;
 
 	// Returns the results.
 	const Results& results() const
@@ -85,7 +94,7 @@ private:
 private:
 	std::vector<Rectangle> m_rectangles;			// the collection of the rectangles
 	std::vector<Event> m_events;					// the events generated from m_rectangles
-	std::unordered_set<size_t> m_activeRects;		// the active rectangles
+	std::set<rect_index_t> m_activeRects;			// the active rectangles
 
 	// The results grouped by the number of the overlapping rectangles:
 	// key = 2 : all the pairs of the overlapping rectangles

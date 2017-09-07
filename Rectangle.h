@@ -2,12 +2,14 @@
 
 #include <iostream>
 
+typedef size_t rect_index_t;
+
 struct Segment
 {
 	int a;
 	int b;
-	size_t rectIndex1;
-	size_t rectIndex2;
+	rect_index_t rectIndex1;
+	rect_index_t rectIndex2;
 
 	Segment()
 		: a(INT_MIN)
@@ -121,12 +123,12 @@ public:
 		m_bottom = bottom;
 	}
 
-	size_t index() const
+	rect_index_t index() const
 	{
 		return m_index;
 	}
 
-	void setIndex(size_t index)
+	void setIndex(rect_index_t index)
 	{
 		m_index = index;
 	}
@@ -239,9 +241,15 @@ public:
 	}
 
 protected:
-	size_t m_index;
+	rect_index_t m_index;
 	int m_left;
 	int m_top;
 	int m_right;
 	int m_bottom;
 };
+
+inline bool operator ==(const Rectangle &lhs, const Rectangle &rhs)
+{
+	return (lhs.left() == rhs.left()) && (lhs.top() == rhs.top()) &&
+		(lhs.right() == rhs.right()) && (lhs.bottom() == rhs.bottom());
+}

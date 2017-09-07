@@ -18,8 +18,6 @@ OverlappedRectsSolver::~OverlappedRectsSolver()
 ///
 void OverlappedRectsSolver::prepare()
 {
-	m_activeRects.reserve(m_rectangles.size());
-
 	m_events.clear();
 	m_events.reserve(2 * m_rectangles.size());
 
@@ -83,7 +81,7 @@ void OverlappedRectsSolver::processIntersectionSegments(const std::vector<Segmen
 		ovlRects.overlapRect = overlap;
 		updateResults(2, ovlRects);
 
-		std::set<size_t> rects; // I'm using 'set' just for having the rectangle indexes printed in ascending order
+		std::set<rect_index_t> rects; // I'm using 'set' just for having the rectangle indexes printed in ascending order
 		rects.insert(segments[i].rectIndex1);
 		rects.insert(segments[i].rectIndex2);
 
