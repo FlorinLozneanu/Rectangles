@@ -67,7 +67,7 @@ void OverlappedRectsSolver::solve()
 	}
 }
 
-///
+/// Processes the set of segments and find out all the overlapping two, three or more overlapping rectangles.
 void OverlappedRectsSolver::processIntersectionSegments(const std::vector<Segment> &segments)
 {
 	for (size_t i = 0; i < segments.size(); i++)
@@ -76,6 +76,8 @@ void OverlappedRectsSolver::processIntersectionSegments(const std::vector<Segmen
 		Rectangle rect2 = m_rectangles[segments[i].rectIndex2];
 		Rectangle overlap = rect.getIntersection(rect2);
 
+		// the current vertical segment is the intersection between rectangles 'rectIndex1' and 'rectIndex2'
+		// compute the overlapping rectangle and add to the results
 		OveralappingRectangles ovlRects;
 		ovlRects.rectIndexes = std::set<size_t>({ segments[i].rectIndex1, segments[i].rectIndex2 });
 		ovlRects.overlapRect = overlap;
@@ -85,16 +87,20 @@ void OverlappedRectsSolver::processIntersectionSegments(const std::vector<Segmen
 		rects.insert(segments[i].rectIndex1);
 		rects.insert(segments[i].rectIndex2);
 
+		// find out other rectangles which intersects with the current rectangles ('rectIndex1' and 'rectIndex2').
 		for (size_t j = i + 1; j < segments.size(); j++)
 		{
 			if (!segments[i].intersect(segments[j]))
 				break;
 
+			// found two overlapping rectangles: add them two the set of the overlapping rectangles
+			// and update the c
+
 			rects.insert(segments[j].rectIndex2);
 			overlap = overlap.getIntersection(m_rectangles[segments[j].rectIndex2]);
 		}
 
-		// do we have more than two overlapping rectangles and the intersection is a rectangle ?
+		// do we have more than two overlapping rectangles ?
 		if ((rects.size() > 2))
 		{
 			OveralappingRectangles ovlRects;
