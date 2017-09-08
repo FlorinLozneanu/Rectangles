@@ -7,7 +7,7 @@
 #include "..\Rectangles.h"
 #include "..\OverlappedRectsSolver.h"
 
-/// Helper function: checks if 'ovRects' is a solution
+/// Helper function: checks if 'ovRects' is an expected result
 bool CheckResult(const OveralappingRectangles &ovRects, const std::list<OveralappingRectangles> &results)
 {
 	auto it = std::find_if(results.begin(), results.end(), 
